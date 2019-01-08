@@ -37,13 +37,14 @@ class H2OGeneralizedLinearEstimator(H2OEstimator):
                       "keep_cross_validation_models", "keep_cross_validation_predictions",
                       "keep_cross_validation_fold_assignment", "fold_assignment", "fold_column", "response_column",
                       "ignored_columns", "ignore_const_cols", "score_each_iteration", "offset_column", "weights_column",
-                      "family", "tweedie_variance_power", "tweedie_link_power", "solver", "alpha", "lambda_",
-                      "lambda_search", "early_stopping", "nlambdas", "standardize", "missing_values_handling",
-                      "compute_p_values", "remove_collinear_columns", "intercept", "non_negative", "max_iterations",
-                      "objective_epsilon", "beta_epsilon", "gradient_epsilon", "link", "prior", "lambda_min_ratio",
-                      "beta_constraints", "max_active_predictors", "interactions", "interaction_pairs", "obj_reg",
-                      "export_checkpoints_dir", "balance_classes", "class_sampling_factors", "max_after_balance_size",
-                      "max_confusion_matrix_size", "max_hit_ratio_k", "max_runtime_secs", "custom_metric_func"}
+                      "family", "tweedie_variance_power", "tweedie_link_power", "theta", "theta_iteration_step",
+                      "solver", "alpha", "lambda_", "lambda_search", "early_stopping", "nlambdas", "standardize",
+                      "missing_values_handling", "compute_p_values", "remove_collinear_columns", "intercept",
+                      "non_negative", "max_iterations", "objective_epsilon", "beta_epsilon", "gradient_epsilon", "link",
+                      "prior", "lambda_min_ratio", "beta_constraints", "max_active_predictors", "interactions",
+                      "interaction_pairs", "obj_reg", "export_checkpoints_dir", "balance_classes",
+                      "class_sampling_factors", "max_after_balance_size", "max_confusion_matrix_size",
+                      "max_hit_ratio_k", "max_runtime_secs", "custom_metric_func"}
         if "Lambda" in kwargs: kwargs["lambda_"] = kwargs.pop("Lambda")
         for pname, pvalue in kwargs.items():
             if pname == 'model_id':
@@ -291,13 +292,13 @@ class H2OGeneralizedLinearEstimator(H2OEstimator):
         Family. Use binomial for classification with logistic regression, others are for regression problems.
 
         One of: ``"gaussian"``, ``"binomial"``, ``"quasibinomial"``, ``"ordinal"``, ``"multinomial"``, ``"poisson"``,
-        ``"gamma"``, ``"tweedie"``  (default: ``"gaussian"``).
+        ``"gamma"``, ``"tweedie"``, ``"negbinomial"``  (default: ``"gaussian"``).
         """
         return self._parms.get("family")
 
     @family.setter
     def family(self, family):
-        assert_is_type(family, None, Enum("gaussian", "binomial", "quasibinomial", "ordinal", "multinomial", "poisson", "gamma", "tweedie"))
+        assert_is_type(family, None, Enum("gaussian", "binomial", "quasibinomial", "ordinal", "multinomial", "poisson", "gamma", "tweedie", "negbinomial"))
         self._parms["family"] = family
 
 
@@ -329,6 +330,36 @@ class H2OGeneralizedLinearEstimator(H2OEstimator):
     def tweedie_link_power(self, tweedie_link_power):
         assert_is_type(tweedie_link_power, None, numeric)
         self._parms["tweedie_link_power"] = tweedie_link_power
+
+
+    @property
+    def theta(self):
+        """
+        Theta
+
+        Type: ``float``  (default: ``1``).
+        """
+        return self._parms.get("theta")
+
+    @theta.setter
+    def theta(self, theta):
+        assert_is_type(theta, None, numeric)
+        self._parms["theta"] = theta
+
+
+    @property
+    def theta_iteration_step(self):
+        """
+        Theta iteration step
+
+        Type: ``int``  (default: ``0``).
+        """
+        return self._parms.get("theta_iteration_step")
+
+    @theta_iteration_step.setter
+    def theta_iteration_step(self, theta_iteration_step):
+        assert_is_type(theta_iteration_step, None, int)
+        self._parms["theta_iteration_step"] = theta_iteration_step
 
 
     @property
